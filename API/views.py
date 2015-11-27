@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
+from django.core import serializers
 import json
 from .models import Friend
 from .forms import FriendForm
@@ -8,14 +9,19 @@ from .forms import FriendForm
 def base(request):
     return HttpResponse("This is the base of the API! :)")
 
-def get_friends(request,friend_count):
-    
-    friends = {}
-    school_friends = {1:'mary',2:'jane'}
-    football_friends = {1:'chris',2:'bob',3:'billbob'}
-    friends['group1']=school_friends
-    friends['group2']=football_friends
-    return JsonResponse(data=friends,safe=False)
+def get_friends(request,firstName):
+        
+    if request.method=="GET":
+        #data = serializers.serialize("json",Friend.objects.get(firstName=firstName))
+        data = serializers.serialize('json',Friend.objects.filter(firstName=firstName))
+        return JsonResponse(data=data,safe=False)
+            #HttpResponse("Testing to see if this works")
+        '''else:
+            data = serializers.serialize("json",Friend.objects.get(name=name))
+            #return HttpResponse("didn't retrieve")
+            return JsonResponse(data=data,safe=False)'''
+    else:
+        return HttpResponse("Was not a get request!")
     
 def add_friends(request):
     
@@ -27,5 +33,14 @@ def add_friends(request):
     else:
         return HttpResponse("There was an error, your friend was not added")
     
+    
+def delete_friends(request,firstName):
+    
+    if request.method == 'DELETE':
+        friend = Friend.objects.get(firstName=firstName)
+        friend.delete()
+        return HttpResponse("Friend "+friend.firstName+" was deleted")
+    else:
+        return HttpResponse("The delete didn't work")
     
     
