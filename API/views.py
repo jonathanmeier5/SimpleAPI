@@ -2,8 +2,12 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 from .models import Friend
+from .forms import FriendForm
 
 # Create your views here.
+def base(request):
+    return HttpResponse("This is the base of the API! :)")
+
 def get_friends(request,friend_count):
     
     friends = {}
@@ -16,8 +20,10 @@ def get_friends(request,friend_count):
 def add_friends(request):
     
     if request.method == 'POST':
-        Person.objects.create(**request.POST)
-        return HttpResponse("Your friend was added!")
+        form = FriendForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Your friend was added!")
     else:
         return HttpResponse("There was an error, your friend was not added")
     
