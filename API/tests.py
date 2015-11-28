@@ -55,6 +55,12 @@ class FriendsTest(TestCase):
         self.assertJSONEqual(json.loads(response.content.decode()),
                                 serializers.serialize("json",Friend.objects.filter(firstName="Becky")))
         
+        
+    def test_update_friend(self):
+        pass
+
+
+
     def test_delete_friend(self):
         
         self.assertEqual(Friend.objects.count(),2)
@@ -63,5 +69,12 @@ class FriendsTest(TestCase):
         
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Friend.objects.count(),1)
+    
+        
+        
+        
+        
+        
+        
         
         

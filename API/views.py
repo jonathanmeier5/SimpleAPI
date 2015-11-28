@@ -42,5 +42,25 @@ def delete_friends(request,firstName):
         return HttpResponse("Friend "+friend.firstName+" was deleted")
     else:
         return HttpResponse("The delete didn't work")
+
+def update_friends(request,firstName):
+    
+    if request.method == 'POST':
+        form = FriendForm(request.POST)
+        if form.is_valid():
+        
+            friend, created = Friend.objects.update_or_create(get(firstName=firstName,
+                                                            default=form))
+        if created:
+            return HttpResponse("had to create a new guy")
+        else:
+            return HttpResponse("Updated the thing")
+    else:
+        return HttpResponse("You really need to use a POST")
+
+        
+    
+    
+    
     
     
